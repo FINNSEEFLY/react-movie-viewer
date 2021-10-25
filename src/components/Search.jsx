@@ -18,17 +18,16 @@ const Search = () => {
   };
 
   return (
-    <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
+    <Stack direction="row" justifyContent="center" alignItems="center" spacing={2} component="form">
       <TextField
         id="outlined-basic"
         label="Search something"
         variant="outlined"
         value={searchKeyword}
         onChange={changeValueHandler}
-        onSubmit={onSubmit}
         disabled={status !== 'idle'}
       />
-      <Button variant="contained" onClick={onSubmit} disabled={status !== 'idle'}>
+      <Button type="submit" variant="contained" onClick={onSubmit} disabled={status !== 'idle'}>
         Search
       </Button>
     </Stack>
