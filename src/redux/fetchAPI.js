@@ -1,5 +1,6 @@
 const fetchMovies = async (searchKeyWord, page = 1) => {
-  const apiKey = '32cdb181';
+  // const apiKey = '32cdb181'; // the limit of requests per day has been reached
+  const apiKey = 'f8e55ab0';
   const dataLinkAPI = 'https://omdbapi.com/';
 
   const response = await fetch(`${dataLinkAPI}?apikey=${apiKey}&page=${page}&s=${searchKeyWord}`);
