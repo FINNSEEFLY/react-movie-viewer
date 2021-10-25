@@ -4,24 +4,23 @@ import fetchMovies from './fetchAPI';
 const initialState = {
   movies: [],
   status: 'idle',
-  page: 1,
+  countOfPages: null,
   error: null,
+  searchKeyword: null,
 };
+
+export const selectSearchKeyword = (state) => state.app.searchKeyword;
 
 export const searchMoviesAsync = createAsyncThunk(
   'movies/searchMoviesAsync',
-  async (searchKeyWord, page) => fetchMovies(searchKeyWord, page)
+  async ({ searchKeyword, page }) => fetchMovies(searchKeyword, page)
 );
 
 const moviesSlice = createSlice({
   name: 'movies',
   initialState,
   reducers: {
-    nextPage: (state) => {
-      state.page += 1;
-    },
     clearMovies: (state) => {
-      state.page = 1;
       state.movies = [];
     },
     setError: (state, action) => {
@@ -34,31 +33,34 @@ const moviesSlice = createSlice({
   extraReducers: {
     [searchMoviesAsync.pending]: (state) => {
       state.status = 'loading';
+      state.movies = [];
     },
     [searchMoviesAsync.fulfilled]: (state, action) => {
       state.status = 'idle';
       if (action.payload.Response === 'False') {
         state.error = action.payload.Error;
+        state.countOfPages = null;
+        state.searchKeyword = null;
         return;
       }
-      if (state.page === 1) {
-        state.movies = action.payload.movies;
-        return;
-      }
-      state.movies = [...state.movies, ...action.payload.movies];
+      state.movies = action.payload.movies;
+      state.countOfPages = Math.ceil(action.payload.moviesCount / 10);
+      state.searchKeyword = action.payload.searchKeyword;
     },
     [searchMoviesAsync.rejected]: (state) => {
       state.status = 'idle';
       state.error = 'Your request ran into a problem...';
+      state.countOfPages = null;
+      state.searchKeyword = null;
     },
   },
 });
 
-export const { nextPage, clearMovies, setError, clearError } = moviesSlice.actions;
+export const { clearMovies, setError, clearError } = moviesSlice.actions;
 
-export const selectMovies = (state) => state.movies.movies;
-export const selectPage = (state) => state.movies.page;
-export const selectStatus = (state) => state.movies.status;
-export const selectError = (state) => state.movies.error;
+export const selectMovies = (state) => state.app.movies;
+export const selectCountOfPages = (state) => state.app.countOfPages;
+export const selectStatus = (state) => state.app.status;
+export const selectError = (state) => state.app.error;
 
 export default moviesSlice.reducer;

@@ -14,6 +14,7 @@ const fetchMovies = async (searchKeyWord, page = 1) => {
     Title: item.Title,
     imdbID: item.imdbID,
   }));
+
   let shortPlotsJson = null;
   let longPlotsJson = null;
   await Promise.all(
@@ -36,7 +37,12 @@ const fetchMovies = async (searchKeyWord, page = 1) => {
     resultArray[i].FullPlot = longPlotsJson[i].Plot;
   }
 
-  return { Response: 'True', movies: resultArray };
+  return {
+    Response: 'True',
+    movies: resultArray,
+    moviesCount: json.totalResults,
+    searchKeyword: searchKeyWord,
+  };
 };
 
 export default fetchMovies;

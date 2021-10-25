@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import { Button, Stack, TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearMovies, searchMoviesAsync, selectPage, selectStatus } from '../redux/moviesSlice';
+import { clearMovies, searchMoviesAsync, selectStatus } from '../redux/moviesSlice';
 
 const Search = () => {
   const [searchKeyword, setSearchKeyword] = useState();
   const dispatch = useDispatch();
-  const page = useSelector(selectPage);
   const status = useSelector(selectStatus);
+
   const changeValueHandler = (event) => {
     setSearchKeyword(event.target.value);
   };
   const onSubmit = () => {
     if (!searchKeyword) return;
     dispatch(clearMovies());
-    dispatch(searchMoviesAsync(searchKeyword, page));
+    dispatch(searchMoviesAsync({ searchKeyword }));
   };
 
   return (
