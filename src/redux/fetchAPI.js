@@ -43,6 +43,7 @@ const fetchMovies = async (searchKeyWord, page = 1) => {
     movies: resultArray,
     moviesCount: json.totalResults,
     searchKeyword: searchKeyWord,
+    page,
   };
 };
 

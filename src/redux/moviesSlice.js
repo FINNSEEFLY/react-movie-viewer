@@ -5,6 +5,7 @@ const initialState = {
   movies: [],
   status: 'idle',
   countOfPages: null,
+  page: 1,
   error: null,
   searchKeyword: null,
 };
@@ -41,17 +42,20 @@ const moviesSlice = createSlice({
         state.error = action.payload.Error;
         state.countOfPages = null;
         state.searchKeyword = null;
+        state.page = 1;
         return;
       }
       state.movies = action.payload.movies;
       state.countOfPages = Math.ceil(action.payload.moviesCount / 10);
       state.searchKeyword = action.payload.searchKeyword;
+      state.page = action.payload.page;
     },
     [searchMoviesAsync.rejected]: (state) => {
       state.status = 'idle';
       state.error = 'Your request ran into a problem...';
       state.countOfPages = null;
       state.searchKeyword = null;
+      state.page = 1;
     },
   },
 });
@@ -62,5 +66,6 @@ export const selectMovies = (state) => state.app.movies;
 export const selectCountOfPages = (state) => state.app.countOfPages;
 export const selectStatus = (state) => state.app.status;
 export const selectError = (state) => state.app.error;
+export const selectPage = (state) => state.app.page;
 
 export default moviesSlice.reducer;
